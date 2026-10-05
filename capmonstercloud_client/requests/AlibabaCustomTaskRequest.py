@@ -5,7 +5,7 @@ from .CustomTaskRequestBase import CustomTaskRequestBase
 
 ALLOWED_METADATA_KEYS = {
     'sceneId', 'prefix', 'userId', 'userUserId', 'verifyType',
-    'region', 'UserCertifyId', 'apiGetLib', 'cookieRequired', 'punishUrl',
+    'region', 'UserCertifyId', 'apiGetLib', 'cookieRequired', 'punishUrl', 'CaptchaType',
 }
 
 class AlibabaCustomTaskRequest(CustomTaskRequestBase):
@@ -17,13 +17,16 @@ class AlibabaCustomTaskRequest(CustomTaskRequestBase):
             class as "alibaba".
         metadata: A dictionary of Alibaba-specific parameters. Standard mode
             requires sceneId and prefix; userId, userUserId, verifyType, region,
-            UserCertifyId, apiGetLib, and cookieRequired are optional, needed
-            only for sites that use them. Alternatively, for websites that
-            trigger verification through a separate "/punish" URL, pass only
-            punishUrl (the full punish page URL) instead of sceneId/prefix.
+            UserCertifyId, apiGetLib, cookieRequired, and CaptchaType are optional,
+            needed only for sites that use them. CaptchaType can be set to "TRACELESS"
+            for invisible verification without user interaction. cookieRequired should
+            be True for Alibaba WAF (which uses ssxmod_itna/ssxmod_itna2 cookies).
+            Alternatively, for websites that trigger verification through a separate
+            "/punish" URL, pass only punishUrl (the full punish page URL) instead
+            of sceneId/prefix.
     """
     captchaClass: str = Field(default='alibaba', description='The constant string value identifying the captcha class as "alibaba".')
-    metadata: Dict[str, Union[str, bool]] = Field(..., description='A dictionary of Alibaba-specific parameters. Requires sceneId and prefix, unless punishUrl is provided instead. userId, userUserId, verifyType, region, UserCertifyId, apiGetLib, and cookieRequired are optional, needed only for sites that use them.')
+    metadata: Dict[str, Union[str, bool]] = Field(..., description='A dictionary of Alibaba-specific parameters. Requires sceneId and prefix, unless punishUrl is provided instead. userId, userUserId, verifyType, region, UserCertifyId, apiGetLib, cookieRequired, and CaptchaType are optional, needed only for sites that use them. CaptchaType can be "TRACELESS" for invisible verification.')
 
     @field_validator('metadata')
     @classmethod

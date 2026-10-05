@@ -145,6 +145,32 @@ class AlibabaCustomTaskRequestTest(unittest.TestCase):
         task_dictionary = request.getTaskDict()
         self.assertNotIn("proxyType", task_dictionary)
 
+    def test_alibaba_captcha_type_traceless(self):
+        metadata_example = {
+            "sceneId": self.sceneIdExample,
+            "prefix": self.prefixExample,
+            "CaptchaType": "TRACELESS",
+        }
+        request = AlibabaCustomTaskRequest(
+            websiteUrl=self.websiteUrlExample,
+            metadata=metadata_example,
+        )
+        task_dictionary = request.getTaskDict()
+        self.assertEqual(task_dictionary["metadata"]["CaptchaType"], "TRACELESS")
+
+    def test_alibaba_invalid_metadata_key(self):
+        metadata_example = {
+            "sceneId": self.sceneIdExample,
+            "prefix": self.prefixExample,
+            "invalidKey": "value",
+        }
+        self.assertRaises(
+            TypeError,
+            AlibabaCustomTaskRequest,
+            websiteUrl=self.websiteUrlExample,
+            metadata=metadata_example,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

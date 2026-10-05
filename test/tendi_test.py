@@ -68,6 +68,28 @@ class TenDiCustomTaskRequestTest(unittest.TestCase):
             metadata={"invalidKey": "value"},
         )
 
+    def testMetadataWithAidEncrypted(self):
+        request = TenDiCustomTaskRequest(
+            websiteUrl=TenDiCustomTaskRequestTest.websiteUrlExample,
+            websiteKey=TenDiCustomTaskRequestTest.websiteKeyExample,
+            metadata={"aidEncrypted": "encrypted_aid_value_here"},
+        )
+        request_dict = request.getTaskDict()
+        self.assertEqual(request_dict["metadata"]["aidEncrypted"], "encrypted_aid_value_here")
+
+    def testMetadataWithBothFields(self):
+        request = TenDiCustomTaskRequest(
+            websiteUrl=TenDiCustomTaskRequestTest.websiteUrlExample,
+            websiteKey=TenDiCustomTaskRequestTest.websiteKeyExample,
+            metadata={
+                "captchaUrl": "https://example.com/TCaptcha.js",
+                "aidEncrypted": "encrypted_aid_value_here",
+            },
+        )
+        request_dict = request.getTaskDict()
+        self.assertEqual(request_dict["metadata"]["captchaUrl"], "https://example.com/TCaptcha.js")
+        self.assertEqual(request_dict["metadata"]["aidEncrypted"], "encrypted_aid_value_here")
+
 
 if __name__ == "__main__":
     unittest.main()
